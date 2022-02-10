@@ -1,0 +1,19 @@
+{
+  "name": "cid-converter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bundle": "esbuild --bundle node_modules/@ethersphere/swarm-cid/dist/index.js --global-name=swarmCid --outfile=dist/bundle.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.14.21"
+  },
+  "dependencies": {
+    "@ethersphere/swarm-cid": "^0.1.0"
+  }
+}

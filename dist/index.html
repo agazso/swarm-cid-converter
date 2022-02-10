@@ -1,0 +1,102 @@
+<!--
+  Swarm CID converter
+  https://github.com/agazso/swarm-cid-converter
+ -->
+<html>
+  <head>
+    <title>Swarm CID converter</title>
+    <style>
+section {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding-top: 10vh;
+}
+input {
+  width: 100%;
+  max-width: 80%;
+  font-size: large;
+  margin-left: 5%;
+  margin-right: 5%;
+  text-align: center;
+}
+body {
+  color: #444;
+  margin: 0;
+  font-size: 0.875rem;
+  font-family: Work Sans,Montserrat,Nunito,Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-weight: 400;
+  line-height: 1.43;
+  background-color: #efefef;
+}
+a {
+  color: inherit;
+}
+    </style>
+    <script src='./bundle.js'></script>
+    <script>
+      function write(s) {
+        document.getElementById('output').innerHTML += s + '<br><br>'
+      }
+      function clear() {
+        document.getElementById('output').innerHTML = ''
+      }
+      function link(href) {
+        return '<a href="' + href + '">' + href + '</a>'
+      }
+      function isReference(ref) {
+        return /[0-9a-fA-F]{64,128}/.test(ref)
+      }
+      function getReference(text) {
+        const refRegexp = /([0-9a-fA-F]{64,128})/
+        const match = text.match(refRegexp)
+        return match && match.length > 1 && match[1]
+      }
+      function getCid(text) {
+        const cidRegexp = /(bah5[aq][0-9a-z]{56})/
+        const match = text.match(cidRegexp)
+        return match && match.length > 1 && match[1]
+      }
+
+      const gatewayDomain = 'api.gateway.ethswarm.org'
+      const bzzLinkDomain = 'bzz.link'
+
+      window.onload = function() {
+        const id = document.getElementById('id')
+        console.log({id})
+        id.oninput = function(e) {
+          const text = id.value
+          const ref = getReference(text)
+          const cid = getCid(text)
+          clear()
+          if (ref) {
+            const manifestCid = swarmCid.encodeManifestReference(ref)
+            const feedCid = swarmCid.encodeFeedReference(ref)
+            write('Swarm hash: ' + ref)
+            write('Gateway link: ' + link('https://' + gatewayDomain + '/bzz/' + ref))
+            write('Manifest link: ' + link('https://' + manifestCid + '.' + bzzLinkDomain + '/'))
+            write('Feed link: ' + link('https://' + feedCid + '.' + bzzLinkDomain + '/'))
+          } else if (cid) {
+            try {
+              const ref = swarmCid.decodeCid(cid)
+              if (ref.reference) {
+                write('Swarm hash: ' + ref.reference)
+                write('Gateway link: ' + link('https://' + gatewayDomain + '/bzz/' + ref.reference))
+              }
+            } catch (e) {
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <section>
+      <label for="id">Enter CID or Swarm Hash</label>
+      <input id="id">
+      <p id="output"></p>
+    </section>
+  </body>
+</html>
