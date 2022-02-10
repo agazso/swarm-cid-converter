@@ -4,6 +4,10 @@ This project is a small web app where you can paste a Swarm hash or a Swarm CID 
 
 ![Screenshot](screenshot.png)
 
+## Try it!
+
+https://bah5acgza33susxvxfdcreafjdx6ifbz5xxksu2g2ywwbnqfg4glc7n4syugq.bzz.link/
+
 ## Installation
 
 Installing npm packages:
